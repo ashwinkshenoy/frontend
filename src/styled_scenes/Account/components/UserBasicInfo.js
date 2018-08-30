@@ -35,15 +35,16 @@ const MenuIcon = styled(Icon)`
   color: #5fb79e;
 `;
 
-const UserBasicInfo = ({ user_profile: user = {}, match }) => {
+const UserBasicInfo = ({ user_profile: user = {}, match, logOut }) => {
   const name = user.fullName || user.username;
   const dpUrl = (user.profilePicture && user.profilePicture.url) || ImgurAvatar;
   let activePath = match.path.replace('/account/', '');
-  const logout = () => {
-    Parse.User.logOut().then(() => {
-      history.push('/');
-    });
-  };
+  // const logout = () => {
+  //   props.logOut();
+  //   // Parse.User.logOut().then(() => {
+  //   //   history.push('/');
+  //   // });
+  // };
   const scrollDownMobileOnly = () => {
     const currentWidth = window.innerWidth;
     if (currentWidth <= 750) {
@@ -122,7 +123,7 @@ const UserBasicInfo = ({ user_profile: user = {}, match }) => {
             </Menu.Item>
           </Link>
 
-          <div style={{ cursor: 'pointer' }} onClick={logout}>
+          <div style={{ cursor: 'pointer' }} onClick={() => logOut()}>
             <Menu.Item name="logout" active={activePath === 'logout'}>
               <MenuIcon disabled name="angle right" circular />
               <span>
