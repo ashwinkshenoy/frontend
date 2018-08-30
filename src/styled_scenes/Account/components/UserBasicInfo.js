@@ -112,7 +112,7 @@ const UserBasicInfo = ({ user_profile: user = {}, match, logOut }) => {
               </span>
             </Menu.Item>
           </Link>
-
+          { /*
           <Link to="/account/settings" onClick={scrollDownMobileOnly}>
             <Menu.Item name="settings" active={activePath === 'settings'}>
               <MenuIcon disabled name="angle right" circular />
@@ -122,7 +122,7 @@ const UserBasicInfo = ({ user_profile: user = {}, match, logOut }) => {
               </span>
             </Menu.Item>
           </Link>
-
+            */ }
           <div style={{ cursor: 'pointer' }} onClick={() => logOut()}>
             <Menu.Item name="logout" active={activePath === 'logout'}>
               <MenuIcon disabled name="angle right" circular />
