@@ -1,13 +1,15 @@
 // NPM
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { env, serverBaseURL } from 'libs/config';
-import axios from 'axios';
+import { env } from 'libs/config';
 // COMPONENTS
 import Button from '../Button';
-// COMMENT: the homeSearch is just for the time being
 import { Image } from 'semantic-ui-react';
-
+// COMMENT: the homeSearch is just for the time being
+// REDUX
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { getCurrentUser, logOut } from 'scenes/sessions/actions';
 // ACTIONS/CONFIG
 import { Dropdown } from 'semantic-ui-react';
 
@@ -39,40 +41,14 @@ const AvatarWrapper = styled.div`
 `;
 
 // MODULE
-export default class DesktopDropDownMenu extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      logged_in: false,
-      current_user: {},
-    };
-  }
+class DesktopDropDownMenu extends Component {
 
-  async componentDidMount() {
-    try {
-      const localSession = localStorage.getItem(`please-${env}-session`);
-      if (localSession) {
-        const jsonUser = JSON.parse(localSession);
-        const currentUser = await axios.get(
-          `${serverBaseURL}/users/me`,
-          { headers: { 'Authorization': `Bearer ${jsonUser.accessToken}`}}
-        ).catch( error => {
-          this.setState({ logged_in: false });
-          console.log(error);
-        });
-        this.setState({ logged_in: true, current_user: currentUser.data });
-      } else {
-        this.setState({ logged_in: false });
-      }
-    } catch (error) {
-      this.setState({ logged_in: false });
-    }
+  componentDidMount() {
+    this.props.getCurrentUser();
   }
 
   logout = () => {
-    localStorage.removeItem(`please-${env}-session`);
-    this.setState({ logged_in: false, current_user: {} });
-    history.push('/');
+    this.props.logOut();
   };
 
   navigate_to = path => {
@@ -94,13 +70,13 @@ export default class DesktopDropDownMenu extends Component {
 
   logged_in() {
     const dpUrl =
-      (this.state.current_user.profilePicture && this.state.current_user.profilePicture.url) ||
+      (this.props.session.profilePicture && this.props.session.profilePicture.url) ||
       ImgurAvatar;
     const showAddServiceButton = window.location.hash !== '#/account/services'; //this.props.history && this.props.history.location.pathname !== "/account/services"
     const truncatesUsername =
-      this.state.current_user.username.length > 13
-        ? this.state.current_user.username.substring(0, 11).concat('...')
-        : this.state.current_user.username;
+      this.props.session.username.length > 13
+        ? this.props.session.username.substring(0, 11).concat('...')
+        : this.props.session.username;
     return (
       <Wrap>
         {showAddServiceButton && (
@@ -146,10 +122,24 @@ export default class DesktopDropDownMenu extends Component {
   }
 
   render() {
-    if (!this.state.logged_in) {
-      return this.logged_out();
-    } else {
+    if (Object.keys(this.props.session).length) {
       return this.logged_in();
+    } else {
+      return this.logged_out();
     }
   }
 }
+
+
+const mapStateToProps = state => ({
+  session: state.SessionsReducer.session,
+});
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ getCurrentUser, logOut }, dispatch);
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(DesktopDropDownMenu);
