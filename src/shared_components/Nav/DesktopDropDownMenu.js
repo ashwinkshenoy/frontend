@@ -1,8 +1,8 @@
 // NPM
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { env } from 'libs/config';
-
+import { env, serverBaseURL } from 'libs/config';
+import axios from 'axios';
 // COMPONENTS
 import Button from '../Button';
 // COMMENT: the homeSearch is just for the time being
@@ -48,12 +48,19 @@ export default class DesktopDropDownMenu extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     try {
       const localSession = localStorage.getItem(`please-${env}-session`);
       if (localSession) {
         const jsonUser = JSON.parse(localSession);
-        this.setState({ logged_in: true, current_user: jsonUser });
+        const currentUser = await axios.get(
+          `${serverBaseURL}/users/me`,
+          { headers: { 'Authorization': `Bearer ${jsonUser.accessToken}`}}
+        ).catch( error => {
+          this.setState({ logged_in: false });
+          console.log(error);
+        });
+        this.setState({ logged_in: true, current_user: currentUser.data });
       } else {
         this.setState({ logged_in: false });
       }
