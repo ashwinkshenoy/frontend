@@ -1,7 +1,6 @@
 // NPM
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { env } from 'libs/config';
 // COMPONENTS
 import Button from '../Button';
 import { Image } from 'semantic-ui-react';
@@ -42,7 +41,6 @@ const AvatarWrapper = styled.div`
 
 // MODULE
 class DesktopDropDownMenu extends Component {
-
   componentDidMount() {
     this.props.getCurrentUser();
   }
@@ -70,8 +68,7 @@ class DesktopDropDownMenu extends Component {
 
   logged_in() {
     const dpUrl =
-      (this.props.session.profilePicture && this.props.session.profilePicture.url) ||
-      ImgurAvatar;
+      (this.props.session.profilePicture && this.props.session.profilePicture.url) || ImgurAvatar;
     const showAddServiceButton = window.location.hash !== '#/account/services'; //this.props.history && this.props.history.location.pathname !== "/account/services"
     const truncatesUsername =
       this.props.session.username.length > 13
@@ -129,7 +126,6 @@ class DesktopDropDownMenu extends Component {
     }
   }
 }
-
 
 const mapStateToProps = state => ({
   session: state.SessionsReducer.session,

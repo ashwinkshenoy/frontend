@@ -2,8 +2,8 @@ import Parse from 'parse';
 import fetch_helpers from './../../libs/fetch_helpers';
 import history from './../../main/history';
 import { trackMetamaskConnected, trackLedgerConnected } from 'libs/analytics';
-import { serverBaseURL, env } from 'libs/config';
-import axios from 'axios';
+import axios from 'libs/axios';
+import { getSession } from 'libs/user-session';
 
 export const user_profile_fetched = user_profile => {
   return {
@@ -36,14 +36,9 @@ export const edit_user_error_raised = error => {
 };
 
 export const fetch_user_profile = () => async dispatch => {
-  const localStorageUser = localStorage.getItem(`please-${env}-session`);
-  if (localStorageUser) {
-    const jsonUser = JSON.parse(localStorageUser);
-    const jwtToken = jsonUser.accessToken;
-    const user = await axios.get(
-      `${serverBaseURL}/users/me`,
-      { headers: {'Authorization': `Bearer ${jwtToken}`} }
-    ).catch( error => {
+  const session = getSession();
+  if (session) {
+    const user = axios.get('/users/me').catch(error => {
       console.log(error);
       //dispatch(setLoginError({code: error.response.status, message: error.response.data.error_description}));
     });
@@ -69,23 +64,14 @@ export const update_user_service_status = e => async dispatch => {
 };
 
 export const fetch_user_services = () => async dispatch => {
-  const localStorageUser = localStorage.getItem(`please-${env}-session`);
-  if (localStorageUser) {
-    const jsonUser = JSON.parse(localStorageUser);
-    const jwtToken = jsonUser.accessToken;
-    const userServices = await axios.get(
-      `${serverBaseURL}/services`,
-      { headers: {'Authorization': `Bearer ${jwtToken}`} }
-    ).catch( error => {
-      console.log(error);
+  const session = getSession();
+  if (session) {
+    const userServices = await axios.get(`/services`);
+    const services = fetch_helpers.buildServicesJson(userServices.data);
+    dispatch({
+      type: 'USER_SERVICES_FETCHED',
+      payload: { user_services: services },
     });
-    if (userServices) {
-      const services = fetch_helpers.buildServicesJson(userServices.data);
-      dispatch({
-        type: 'USER_SERVICES_FETCHED',
-        payload: { user_services: services },
-      });
-    }
   } else {
     history.push('/');
   }
