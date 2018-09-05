@@ -201,6 +201,45 @@ class ServiceForm extends Component {
           </Modal.Actions>
         </Modal>
 
+        {/* Title */}
+        <Form.Field required>
+          <label>Service name</label>
+          <Form.Input
+            name="title"
+            placeholder="Service name"
+            value={values.title}
+            error={!!(touched.title && errors.title)}
+            {...defaultProps}
+          />
+          {touched.title && errors.title && <ErrorMsg>{errors.title}</ErrorMsg>}
+        </Form.Field>
+
+        {/* Subtitle */}
+        <Form.Field required>
+          <label>Service subtitle</label>
+          <Form.Input
+            name="subtitle"
+            placeholder="Service subtitle"
+            value={values.subtitle}
+            error={!!(touched.subtitle && errors.subtitle)}
+            {...defaultProps}
+          />
+          {touched.subtitle && errors.subtitle && <ErrorMsg>{errors.subtitle}</ErrorMsg>}
+        </Form.Field>
+
+        {/* Description */}
+        <Form.Field required>
+          <label>Service description</label>
+          <Form.TextArea
+            name="description"
+            placeholder="Tell us more..."
+            value={values.description}
+            error={!!(touched.description && errors.description)}
+            {...defaultProps}
+          />
+          {touched.description && errors.description && <ErrorMsg>{errors.description}</ErrorMsg>}
+        </Form.Field>
+
         {/* Service Categories */}
         <Form.Field required>
           <label>Service categories</label>
@@ -215,32 +254,6 @@ class ServiceForm extends Component {
             error={!!(touched.categories && errors.categories)}
           />
           {touched.categories && errors.categories && <ErrorMsg>{errors.categories}</ErrorMsg>}
-        </Form.Field>
-
-        {/* Title */}
-        <Form.Field required>
-          <label>Service name</label>
-          <Form.Input
-            name="title"
-            placeholder="Service name"
-            value={values.title}
-            error={!!(touched.title && errors.title)}
-            {...defaultProps}
-          />
-          {touched.title && errors.title && <ErrorMsg>{errors.title}</ErrorMsg>}
-        </Form.Field>
-
-        {/* Description */}
-        <Form.Field required>
-          <label>Service description</label>
-          <Form.TextArea
-            name="description"
-            placeholder="Tell us more..."
-            value={values.description}
-            error={!!(touched.description && errors.description)}
-            {...defaultProps}
-          />
-          {touched.description && errors.description && <ErrorMsg>{errors.description}</ErrorMsg>}
         </Form.Field>
 
         {/* Price */}
@@ -431,6 +444,7 @@ function validate(values) {
   const requiredFields = [
     'categories',
     'title',
+    'subtitle',
     'description',
     'basePrice',
     'availableDays',
@@ -470,6 +484,7 @@ export default withFormik({
   mapPropsToValues: ({ service }) => ({
     categories: (service && service.categories) || [],
     title: (service && service.title) || '',
+    subtitle: (service && service.subtitle) || '',
     description: (service && service.description) || '',
     basePrice: service && service.basePrice != null ? service.basePrice : '',
     acceptETH: (service && service.acceptETH) || false,
