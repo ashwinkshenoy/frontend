@@ -1,4 +1,4 @@
-import Parse from 'parse';
+import Parse, { Object } from 'parse';
 import { tagsColorMatcher } from './Utils';
 
 const normalizeParseResponseData = data => {
@@ -17,6 +17,59 @@ const get_service_image = mainPicture => {
     return 'https://dummyimage.com/600x400/000/fff';
   }
   return mainPicture.url;
+};
+
+const buildService = service => {
+  const i18nLocale = 'en-us';
+  const keys = [];
+  for (var key in service.periods[0].daysOfWeek) {
+    keys.push(key);
+  }
+  const selectedDays = keys.reduce((accum, curr) => {
+    accum = [...accum, { [curr]: service.periods[0].daysOfWeek[curr] }];
+    return accum;
+  }, []);
+
+  try {
+    service.title = service.title[i18nLocale];
+    service.subtitle = service.subtitle[i18nLocale];
+    service.description = service.description[i18nLocale];
+    service.objectId = service._id;
+    // console.log(Object.entries(service.periods[0].daysOfWeek))
+
+    console.log(selectedDays);
+    service.DayList = selectedDays;
+    // eslint-disable-next-line
+    service.latitude = (service.location && service.location.latitude) || 1;
+    // eslint-disable-next-line
+    service.longitude = (service.location && service.location.longitude) || 1;
+    service.location = `${service.city ? service.city + ',' : ''} ${service.country}`;
+    service.rating = service.rating;
+    service.reviewCount = service.reviewCount;
+    service.slots = service.slots;
+    service.price = service.price == null ? service.pricePerSession : service.price;
+    service.pricePerSession = service.pricePerSession || service.basePrice;
+    if (service.tags && service.tags.length) {
+      const tags = service.tags.map(tag => {
+        const tagBg = tagsColorMatcher(tag);
+        return { label: tag, hoverBg: tagBg, background: tagBg };
+      });
+      service.tags = tags;
+    }
+    if (service.type === undefined) {
+      if (service.picture) {
+        if (typeof service.picture._url === 'string') service.image = service.picture._url;
+        if (typeof service.picture.url === 'string') service.image = service.picture.url;
+      }
+      service.image = service.image || 'https://dummyimage.com/600x400/000/fff';
+    } else {
+      service.image = get_service_image(service.mainPicture);
+    }
+    service.mainPicture = service.mainPicture || service.image;
+  } catch (error) {
+    console.log(error);
+  }
+  return service;
 };
 
 const buildServicesJson = services => {
@@ -119,6 +172,7 @@ export const statuses = {
 
 export default {
   normalizeParseResponseData,
+  buildService,
   getRandomInt,
   get_service_image,
   mapServiceObjects,

@@ -3,7 +3,7 @@ import fetch_helpers from '../../libs/fetch_helpers';
 import history from '../../main/history';
 import { generateFilename } from './../../libs/filename';
 import { trackServiceCreated } from 'libs/analytics';
-import { env, serverBaseURL } from "../../libs/config";
+import { env, serverBaseURL } from '../../libs/config';
 import axios from 'axios';
 
 export const types = {
@@ -60,31 +60,27 @@ export const registerService = (values, history) => async (dispatch, getState) =
         state: 'Grand Cayman',
         countryCode: 'KY',
         geo: {
-          coordinates: [
-            values.latlong.lat,
-            values.latlong.lng
-          ],
-          type: 'Point'
+          coordinates: [values.latlong.lat, values.latlong.lng],
+          type: 'Point',
         },
         formattedAddress: '123 avenue, Flat 4, George Town, Grand Cayman',
         country: {
           names: {
             'en-us': 'Cayman Islands',
-            'fr-fr': 'Îles Caïmans'
-          }
+            'fr-fr': 'Îles Caïmans',
+          },
         },
-        id: null
+        id: null,
       },
       periods: {
-        daysOfWeek: [...values.availableDays]
-      }
-    })
+        daysOfWeek: [...values.availableDays],
+      },
+    });
     // const result = await Parse.Cloud.run('createOrUpdateService', {
     //   ...values,
     //   parseFile,
     //   availableDays: [...values.availableDays],
     // });
-
 
     if (acceptETH) {
       // dispatch(deployContract(result, values, history));
@@ -110,22 +106,24 @@ export const fetchService = serviceId => async (dispatch, getState) => {
   if (isLoading) return;
   const localStorageUser = localStorage.getItem(`please-${env}-session`);
   // if (localStorageUser) {
-    const jsonUser = JSON.parse(localStorageUser);
-    const jwtToken = jsonUser.accessToken;
-
+  const jsonUser = JSON.parse(localStorageUser);
+  const jwtToken = jsonUser.accessToken;
 
   // }
   dispatch({ type: types.SERVICE_FETCH_STARTED });
   try {
-    const result = await axios.get(
-      `${serverBaseURL}/services/${serviceId}`,
-      { headers: {'Authorization': `Bearer ${'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik5ESXdOVUpGUVRjMFF6UTVOMFEyUmpFNFJUZEJRamxGTkVGRE5rRTFNak0zTmtJd09EWkdNQSJ9.eyJpc3MiOiJodHRwczovL3N0YWdpbmctcGxlYXNlLmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1YjhmMDU1NmM4Yzc5MDM2ODU0ODllM2MiLCJhdWQiOiJodHRwczovL3N0YWdpbmctcGxlYXNlLmV1LmF1dGgwLmNvbS9hcGkvdjIvIiwiaWF0IjoxNTM2MTk1MTgwLCJleHAiOjE1MzYyODE1ODAsImF6cCI6ImhkUDlzU3phcnRTSDJsdlIyb0FCQVdkMENxN1VVUVZ2Iiwic2NvcGUiOiJyZWFkOmN1cnJlbnRfdXNlciB1cGRhdGU6Y3VycmVudF91c2VyX21ldGFkYXRhIGRlbGV0ZTpjdXJyZW50X3VzZXJfbWV0YWRhdGEgY3JlYXRlOmN1cnJlbnRfdXNlcl9tZXRhZGF0YSBjcmVhdGU6Y3VycmVudF91c2VyX2RldmljZV9jcmVkZW50aWFscyBkZWxldGU6Y3VycmVudF91c2VyX2RldmljZV9jcmVkZW50aWFscyB1cGRhdGU6Y3VycmVudF91c2VyX2lkZW50aXRpZXMiLCJndHkiOiJwYXNzd29yZCJ9.W_9U5NUt6QNJsJsXSE2kfjCb9VmhIMX0lOH3Ls6it6vN7y3gmoOkQreove_DpI5RPLj_APDVGkqoOrOFRodvJiho6gDVKffK-ko35xgxg2havlOHkkeR7o0Gorqt0ixTtgDzaS4qiAf4uUYlOmc_RrdNTiYvN5Zk78A34hB4zsHaIjFtB2oGo_vXEDGJIbN6mQQzNf4ZaZA6LmPEmYodHq7YXsttOGNxqWI2DPmNMnDzy2-BjjMvK0XwwAmuom1WnOolTZxOhSkAyDMQAI95mrwD7DMtLcukcZLDFCGCHKUowvXNfZ5AoeAoKxp1RHZuoiWGm3XJRW5Wv4rWJN9GVw'}`} }
-    ).catch( error => {
-      console.log(error);
-    });
-    const service = fetch_helpers.normalizeParseResponseData(result.data);
-    console.log(service)
-    dispatch({ type: types.SERVICE_FETCH_SUCCESS, payload: service});
+    const result = await axios
+      .get(`${serverBaseURL}/services/${serviceId}`, {
+        headers: {
+          Authorization: `Bearer ${'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik5ESXdOVUpGUVRjMFF6UTVOMFEyUmpFNFJUZEJRamxGTkVGRE5rRTFNak0zTmtJd09EWkdNQSJ9.eyJpc3MiOiJodHRwczovL3N0YWdpbmctcGxlYXNlLmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1YjhmMDU1NmM4Yzc5MDM2ODU0ODllM2MiLCJhdWQiOiJodHRwczovL3N0YWdpbmctcGxlYXNlLmV1LmF1dGgwLmNvbS9hcGkvdjIvIiwiaWF0IjoxNTM2MTk1MTgwLCJleHAiOjE1MzYyODE1ODAsImF6cCI6ImhkUDlzU3phcnRTSDJsdlIyb0FCQVdkMENxN1VVUVZ2Iiwic2NvcGUiOiJyZWFkOmN1cnJlbnRfdXNlciB1cGRhdGU6Y3VycmVudF91c2VyX21ldGFkYXRhIGRlbGV0ZTpjdXJyZW50X3VzZXJfbWV0YWRhdGEgY3JlYXRlOmN1cnJlbnRfdXNlcl9tZXRhZGF0YSBjcmVhdGU6Y3VycmVudF91c2VyX2RldmljZV9jcmVkZW50aWFscyBkZWxldGU6Y3VycmVudF91c2VyX2RldmljZV9jcmVkZW50aWFscyB1cGRhdGU6Y3VycmVudF91c2VyX2lkZW50aXRpZXMiLCJndHkiOiJwYXNzd29yZCJ9.W_9U5NUt6QNJsJsXSE2kfjCb9VmhIMX0lOH3Ls6it6vN7y3gmoOkQreove_DpI5RPLj_APDVGkqoOrOFRodvJiho6gDVKffK-ko35xgxg2havlOHkkeR7o0Gorqt0ixTtgDzaS4qiAf4uUYlOmc_RrdNTiYvN5Zk78A34hB4zsHaIjFtB2oGo_vXEDGJIbN6mQQzNf4ZaZA6LmPEmYodHq7YXsttOGNxqWI2DPmNMnDzy2-BjjMvK0XwwAmuom1WnOolTZxOhSkAyDMQAI95mrwD7DMtLcukcZLDFCGCHKUowvXNfZ5AoeAoKxp1RHZuoiWGm3XJRW5Wv4rWJN9GVw'}`,
+        },
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    console.log('result', result.data);
+    const service = fetch_helpers.buildService(result.data);
+    dispatch({ type: types.SERVICE_FETCH_SUCCESS, payload: service });
   } catch (error) {
     // dispatch({ type: types.SERVICE_FETCH_ERROR, payload: error });
   }
@@ -176,12 +174,11 @@ export const fetchUserProfile = () => async dispatch => {
   if (localStorageUser) {
     const jsonUser = JSON.parse(localStorageUser);
     const jwtToken = jsonUser.accessToken;
-    const user = await axios.get(
-      `${serverBaseURL}/users/me`,
-      { headers: {'Authorization': `Bearer ${jwtToken}`} }
-    ).catch( error => {
-      console.log(error);
-    });
+    const user = await axios
+      .get(`${serverBaseURL}/users/me`, { headers: { Authorization: `Bearer ${jwtToken}` } })
+      .catch(error => {
+        console.log(error);
+      });
     dispatch(user_profile_fetched({ user_profile: user.data }));
   } else {
     history.push('/login');
