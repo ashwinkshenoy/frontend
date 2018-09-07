@@ -258,6 +258,7 @@ class ServiceForm extends Component {
             placeholder="Service Category"
             selection
             multiple
+            value={values.categories.map(category => category.name)}
             options={serviceTypeDropdownOptions}
             onChange={this.onDropDownChange}
             error={!!(touched.categories && errors.categories)}
@@ -593,8 +594,6 @@ export default withFormik({
     facebook: (service && service.facebook) || '',
     twitter: (service && service.twitter) || '',
     website: (service && service.website) || '',
-    startTime: (service && service.startTime) || '',
-    endTime: (service && service.endTime) || '',
     basePrice: service && service.basePrice != null ? service.basePrice : '',
     acceptETH: (service && service.acceptETH) || false,
     availableDays: (service && service.dayList) || weekDays,
