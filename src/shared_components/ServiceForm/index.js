@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, Form, Modal, Message, Button, Menu } from 'semantic-ui-react';
+import { Dropdown, Form, Modal, Message, Button } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import { getLatLng, geocodeByPlaceId } from 'react-places-autocomplete';
 import styled from 'styled-components';
@@ -11,7 +11,6 @@ import history from './../../main/history';
 import { isMobile, checkRequiredFields } from 'libs/Utils';
 import i18n from './../../libs/i18n';
 import Image from 'shared_components/Image';
-import { weekdays } from 'moment';
 // import MultiImageUploader from 'shared_components/MultiImageUploader/MultiImageUploader';
 
 const serviceCategories = [
@@ -32,7 +31,15 @@ const hoursDropdownOptions = hours.map(h => ({
   text: h.toString().padStart(2, '0') + ':00',
 }));
 
-const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const weekDays = [
+  { weekday: 'Monday', selected: false },
+  { weekday: 'Tuesday', selected: false },
+  { weekday: 'Wednesday', selected: false },
+  { weekday: 'Thursday', selected: false },
+  { weekday: 'Friday', selected: false },
+  { weekday: 'Saturday', selected: false },
+  { weekday: 'Sunday', selected: false },
+];
 
 const tagsDropdownOptions = serviceTags.map(value => ({ text: value, value }));
 
@@ -79,14 +86,17 @@ class ServiceForm extends Component {
   onAvailableDaysChange = (e, { label, checked }) => {
     const { values, setFieldValue, setFieldTouched } = this.props;
     const availableDays = values.availableDays;
+    const labelByDay = availableDays.find(day => day.weekday === label);
+
     if (checked) {
       // checked
-      availableDays.add(label);
+      labelByDay.selected = true;
     } else {
       // unchecked
-      availableDays.delete(label);
+      labelByDay.selected = false;
     }
     setFieldValue('availableDays', availableDays);
+    console.log('availableDays', availableDays);
     setFieldTouched('availableDays', true, false);
   };
 
@@ -272,13 +282,13 @@ class ServiceForm extends Component {
         <Form.Group grouped>
           <Form.Field required>
             <label>Available Days</label>
-            {weekDays.map((weekDay, index) => (
+            {values.availableDays.map(availableDay => (
               <Form.Checkbox
-                id={weekDay}
-                label={weekDay}
-                key={weekDay}
-                name={weekDay}
-                checked={values.availableDays}
+                id={availableDay.weekday}
+                label={availableDay.weekday}
+                key={availableDay.weekday}
+                name={availableDay.weekday}
+                checked={availableDay.selected}
                 onChange={this.onAvailableDaysChange}
               />
             ))}
@@ -521,7 +531,7 @@ export default withFormik({
     rules: (service && service.rules) || [],
     basePrice: service && service.basePrice != null ? service.basePrice : '',
     acceptETH: (service && service.acceptETH) || false,
-    availableDays: (service && service.DayList) || [],
+    availableDays: (service && service.DayList) || weekDays,
     openingTime: service && service.openingTime != null ? service.openingTime : null,
     closingTime: service && service.closingTime != null ? service.closingTime : null,
     slots: service && service.slots != null ? service.slots : '',
