@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, Form, Modal, Message, Button } from 'semantic-ui-react';
+import { Dropdown, Form, Modal, Message, Button, Menu } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import { getLatLng, geocodeByPlaceId } from 'react-places-autocomplete';
 import styled from 'styled-components';
@@ -155,7 +155,6 @@ class ServiceForm extends Component {
   };
 
   render() {
-    console.log(this.props.values.availableDays);
     const {
       values,
       errors,
@@ -250,7 +249,6 @@ class ServiceForm extends Component {
             placeholder="Service Category"
             selection
             multiple
-            value={values.categories}
             options={serviceTypeDropdownOptions}
             onChange={this.onDropDownChange}
             error={!!(touched.categories && errors.categories)}
@@ -288,6 +286,18 @@ class ServiceForm extends Component {
               errors.availableDays && <ErrorMsg>{errors.availableDays}</ErrorMsg>}
           </Form.Field>
         </Form.Group>
+
+        {/* Duration */}
+        <Form.Field required>
+          <label>Duration in Minutes</label>
+          <Form.Input
+            name="duration"
+            value={values.duration}
+            error={!!(touched.duration && errors.duration)}
+            {...defaultProps}
+          />
+          {touched.duration && errors.duration && <ErrorMsg>{errors.duration}</ErrorMsg>}
+        </Form.Field>
 
         {/* Location search */}
         <Form.Field required>
@@ -447,6 +457,8 @@ function validate(values) {
     'title',
     'subtitle',
     'description',
+    'rules',
+    'duration',
     'basePrice',
     'availableDays',
     'openingTime',
@@ -457,7 +469,7 @@ function validate(values) {
 
   const errors = checkRequiredFields(values, requiredFields);
 
-  const numericFields = ['basePrice', 'slots'];
+  const numericFields = ['basePrice', 'slots', 'duration'];
 
   for (const field of numericFields) {
     if (!errors[field] && isNaN(values[field])) {
@@ -487,6 +499,8 @@ export default withFormik({
     title: (service && service.title) || '',
     subtitle: (service && service.subtitle) || '',
     description: (service && service.description) || '',
+    duration: (service && service.duration) || '',
+    rules: (service && service.rules) || [],
     basePrice: service && service.basePrice != null ? service.basePrice : '',
     acceptETH: (service && service.acceptETH) || false,
     availableDays: (service && service.DayList) || [],
