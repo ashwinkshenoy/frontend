@@ -258,11 +258,12 @@ class ServiceForm extends Component {
             placeholder="Service Category"
             selection
             multiple
-            value={values.categories.map(category => category.name)}
+            value={values.categories.map(name => name)}
             options={serviceTypeDropdownOptions}
             onChange={this.onDropDownChange}
             error={!!(touched.categories && errors.categories)}
           />
+          {console.log(values.categories)}
           {touched.categories && errors.categories && <ErrorMsg>{errors.categories}</ErrorMsg>}
         </Form.Field>
 
@@ -455,6 +456,7 @@ class ServiceForm extends Component {
             value={values.tags}
             onChange={this.onDropDownChange}
           />
+          {console.log(values.tags)}
         </Form.Field>
 
         {/* Single image upload */}
