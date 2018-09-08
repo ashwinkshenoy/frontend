@@ -263,7 +263,6 @@ class ServiceForm extends Component {
             onChange={this.onDropDownChange}
             error={!!(touched.categories && errors.categories)}
           />
-          {console.log(values.categories)}
           {touched.categories && errors.categories && <ErrorMsg>{errors.categories}</ErrorMsg>}
         </Form.Field>
 
@@ -453,10 +452,9 @@ class ServiceForm extends Component {
             selection
             fluid
             multiple
-            value={values.tags}
+            value={values.tags.map(tag => tag)}
             onChange={this.onDropDownChange}
           />
-          {console.log(values.tags)}
         </Form.Field>
 
         {/* Single image upload */}
