@@ -37,9 +37,7 @@ const buildService = service => {
     service.duration = service.duration;
     service.dayList = dayList;
     if (service.rules && service.rules.length) {
-      const rules = service.rules.map(rule => ({
-        value: rule[i18nLocale],
-      }));
+      const rules = service.rules.map(rule => rule[i18nLocale]);
       service.rules = rules;
     }
     service.start = service.instructions.start[i18nLocale];
@@ -50,6 +48,8 @@ const buildService = service => {
     service.openingTime = service.periods[0].startTime;
     service.closingTime = service.periods[0].endTime;
     service.reviewCount = service.reviewCount;
+    service.slots = service.periods[0].maxCapacity;
+    service.formattedAddress = service.location.formattedAddress;
     if (service.categories && service.categories.length) {
       const categories = service.categories.map(category =>
         category.names[i18nLocale].toLowerCase(),
@@ -60,7 +60,6 @@ const buildService = service => {
       const tags = service.tags.map(tag => tag.names[i18nLocale]);
       service.tags = tags;
     }
-    service.slots = service.slots;
   } catch (error) {
     console.log(error);
   }
