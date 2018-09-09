@@ -119,6 +119,7 @@ class ServiceForm extends Component {
     geocodeByPlaceId(placeId)
       .then(results => {
         const currentResult = results[0];
+        setFieldValue('location', currentResult);
         const latlngPromise = getLatLng(currentResult);
         setFieldValue('formattedAddress', currentResult.formatted_address);
         const { address_components: addressComponents } = currentResult;
@@ -422,7 +423,7 @@ class ServiceForm extends Component {
           <Form.Field>
             <label>Twitter Link</label>
             <Form.Input
-              name="end"
+              name="twitter"
               value={values.twitter}
               error={!!(touched.twitter && errors.twitter)}
               {...defaultProps}
@@ -432,7 +433,7 @@ class ServiceForm extends Component {
           <Form.Field>
             <label>Website Link</label>
             <Form.Input
-              name="end"
+              name="website"
               value={values.website}
               error={!!(touched.website && errors.website)}
               {...defaultProps}
@@ -440,6 +441,18 @@ class ServiceForm extends Component {
             {touched.website && errors.website && <ErrorMsg>{errors.website}</ErrorMsg>}
           </Form.Field>
         </Form.Group>
+
+        {/* External Url */}
+        <Form.Field>
+          <label>External Url</label>
+          <Form.Input
+            name="externalUrl"
+            value={values.externalUrl}
+            error={!!(touched.externalUrl && errors.externalUrl)}
+            {...defaultProps}
+          />
+          {touched.externalUrl && errors.externalUrl && <ErrorMsg>{errors.externalUrl}</ErrorMsg>}
+        </Form.Field>
 
         {/* Tags */}
         <Form.Field>
@@ -597,7 +610,9 @@ export default withFormik({
     availableDays: (service && service.dayList) || weekDays,
     openingTime: service && service.openingTime != null ? service.openingTime : null,
     closingTime: service && service.closingTime != null ? service.closingTime : null,
+    externalUrl: (service && service.externalUrl) || '',
     slots: service && service.slots != null ? service.slots : '',
+    location: (service && service.location) || {},
     latlong:
       (service &&
         service.latitude &&
