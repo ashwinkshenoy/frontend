@@ -14,9 +14,9 @@ import Image from 'shared_components/Image';
 // import MultiImageUploader from 'shared_components/MultiImageUploader/MultiImageUploader';
 
 const serviceCategories = [
-  { label: i18n.t('places.singular'), value: 'place' },
-  { label: i18n.t('activities.singular'), value: 'activity' },
-  { label: i18n.t('foods.singular'), value: 'food' },
+  { label: i18n.t('places.singular'), value: 'Accommodation' },
+  { label: i18n.t('activities.singular'), value: 'Activity' },
+  { label: i18n.t('foods.singular'), value: 'Food' },
 ];
 
 const serviceTypeDropdownOptions = serviceCategories.map(text => ({
