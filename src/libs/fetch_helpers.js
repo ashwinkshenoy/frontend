@@ -23,12 +23,12 @@ const createService = values => {
   const i18nLocale = 'en-us';
 
   try {
-    values.title = values.title;
     values.categories = values.categories.map(category => ({
       names: {
         [i18nLocale]: category,
       },
     }));
+    values.externalId = '123abs';
     values.periods = [
       {
         startDate: '2018-07-06T00:00:00.000Z',
@@ -131,6 +131,7 @@ const buildService = service => {
       const capitalized = key.charAt(0).toUpperCase() + key.substr(1);
       dayList = [...dayList, { weekday: capitalized, selected }];
     }
+    service.externalId = '123abs';
     service.title = service.title[i18nLocale];
     service.subtitle = service.subtitle[i18nLocale];
     service.description = service.description[i18nLocale];
@@ -169,7 +170,6 @@ const buildService = service => {
 
 const normalizeServiceToPatch = values => {
   const i18nLocale = 'en-us';
-  console.log(values.location);
   try {
     values.acceptETH = values.acceptETH;
     values.title = { [i18nLocale]: values.title };
