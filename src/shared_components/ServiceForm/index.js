@@ -176,7 +176,6 @@ class ServiceForm extends Component {
   };
 
   render() {
-    console.log('values', this.props.values);
     const {
       values,
       errors,
