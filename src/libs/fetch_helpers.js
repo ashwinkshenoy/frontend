@@ -118,7 +118,7 @@ const createService = values => {
   return values;
 };
 
-const buildService = service => {
+const buildServiceForView = service => {
   const i18nLocale = 'en-us';
   let dayList = [];
 
@@ -340,7 +340,7 @@ export default {
   normalizeParseResponseData,
   normalizeServiceToPatch,
   createService,
-  buildService,
+  buildServiceForView,
   getRandomInt,
   get_service_image,
   mapServiceObjects,
